@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "ap-south-1"
+  region = "ca-central-1"
 }
 
 resource "aws_vpc" "devopsshack_vpc" {
@@ -11,7 +11,7 @@ resource "aws_vpc" "devopsshack_vpc" {
 }
 
 resource "aws_subnet" "devopsshack_subnet" {
-  count = 2
+  count                   = 2
   vpc_id                  = aws_vpc.devopsshack_vpc.id
   cidr_block              = cidrsubnet(aws_vpc.devopsshack_vpc.cidr_block, 8, count.index)
   availability_zone       = element(["ap-south-1a", "ap-south-1b"], count.index)
@@ -98,9 +98,9 @@ resource "aws_eks_cluster" "devopsshack" {
 
 
 resource "aws_eks_addon" "ebs_csi_driver" {
-  cluster_name    = aws_eks_cluster.devopsshack.name
-  addon_name      = "aws-ebs-csi-driver"
-  
+  cluster_name = aws_eks_cluster.devopsshack.name
+  addon_name   = "aws-ebs-csi-driver"
+
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
 }
@@ -121,7 +121,7 @@ resource "aws_eks_node_group" "devopsshack" {
   instance_types = ["t2.medium"]
 
   remote_access {
-    ec2_ssh_key = var.ssh_key_name
+    ec2_ssh_key               = var.ssh_key_name
     source_security_group_ids = [aws_security_group.devopsshack_node_sg.id]
   }
 }
